@@ -3,7 +3,7 @@
 import { Suspense, useEffect, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Preload, useGLTF } from '@react-three/drei';
-import { Mic, Search, Settings, Wand2 } from 'lucide-react';
+import { Mic, Search, Settings, User } from 'lucide-react';
 
 const Earth = () => {
   const earth = useGLTF('/planet/scene.gltf');
@@ -24,7 +24,7 @@ const Earth = () => {
 const EarthCanvasWithSearch = () => {
   return (
     <div className="relative w-full h-screen">
-      {/* 3D Earth behind */}
+      {/* 3D Earth */}
       <Canvas
         shadows
         frameloop="demand"
@@ -45,18 +45,26 @@ const EarthCanvasWithSearch = () => {
         <Preload all />
       </Canvas>
 
-      {/* Centered, glassy search bar overlay */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-        {/* Outer pill with soft side glows (to mimic the reference) */}
+      {/* Top Right User Icon */}
+      <div className="absolute top-0 right-0 px-6 py-4">
+        <button className="h-12 w-12 rounded-full bg-white/30 backdrop-blur-md ring-1 ring-white/30 flex items-center justify-center hover:bg-white/40 transition">
+          <User className="h-6 w-6 text-white" />
+        </button>
+      </div>
+
+      {/* Centered Search section */}
+      <div className="absolute inset-0 flex flex-col items-center justify-center space-y-10 pointer-events-none">
+        {/* Title above search bar */}
+        <h1 className="text-6xl font-bold text-white drop-shadow-lg">Oyou</h1>
+
         <div className="relative w-full max-w-4xl px-4 pointer-events-auto">
-          {/* left glow */}
+          {/* side glows */}
           <div className="pointer-events-none absolute -left-4 top-1/2 -translate-y-1/2 h-24 w-40 rounded-full bg-white/10 blur-xl"></div>
-          {/* right glow */}
           <div className="pointer-events-none absolute -right-4 top-1/2 -translate-y-1/2 h-24 w-40 rounded-full bg-white/10 blur-xl"></div>
 
-          {/* main translucent rail */}
-          <div className="relative h-14 flex items-center gap-4 rounded-full bg-white/10 backdrop-blur-xl ring-1 ring-white/25 shadow-[0_8px_30px_rgba(0,0,0,0.35)]5">
-            {/* Mic button (left capsule) */}
+          {/* main search bar */}
+          <div className="relative h-14 flex items-center gap-2 rounded-full bg-white/10 backdrop-blur-xl ring-1 ring-white/25 shadow-[0_8px_30px_rgba(0,0,0,0.35)]">
+            {/* Mic button */}
             <button
               aria-label="Voice search"
               className="flex h-12 w-12 items-center justify-center text-white transition"
@@ -64,19 +72,20 @@ const EarthCanvasWithSearch = () => {
               <Mic className="h-5 w-5" />
             </button>
 
-            {/* Inner white search field (big, like the mock) */}
+            {/* Search input */}
             <div className="flex-1 flex items-center rounded-full bg-white/90 ring-1 ring-black/5 shadow-md">
+              {' '}
               <input
                 type="text"
                 placeholder="Search Oyou or type a URL"
                 className="w-full bg-transparent outline-none placeholder-black/50"
-              />
-              <Search className="h-10 w-5 opacity-70" aria-hidden="true" />
+              />{' '}
+              <Search className="h-10 w-5 opacity-70" aria-hidden="true" />{' '}
             </div>
 
-            {/* Right Settings icon button */}
+            {/* Settings button */}
             <button
-              aria-label="Search"
+              aria-label="Search settings"
               className="flex h-12 w-12 items-center justify-center rounded-full bg-white/15 ring-1 ring-white/25 hover:bg-white/25 transition"
             >
               <Settings className="h-5 w-5" />
