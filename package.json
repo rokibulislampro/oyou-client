@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@react-spring/web": "^10.0.1",
-    "@react-three/drei": "^10.6.1",
+    "@react-three/drei": "^10.7.4",
     "@react-three/fiber": "^9.3.0",
     "framer-motion": "^12.23.12",
     "lucide-react": "^0.539.0",
