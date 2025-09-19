@@ -1,0 +1,13 @@
+/* Large devices (laptop / desktop) */
+@media (min-width: 1024px) {
+  .footer-padding {
+    padding: 1rem 10rem 1rem 10rem;
+  }
+}
+
+/* Medium devices (tablet) */
+@media (max-width: 1023px) {
+  .footer-padding {
+    padding: 1rem 1rem 1rem 1rem; /* tablet padding */
+  }
+}

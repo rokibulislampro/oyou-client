@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { Mic, Search, Settings } from 'lucide-react';
 import { useState } from 'react';
+import './SearchInput.css';
 
 const SearchInput = () => {
   const [query, setQuery] = useState('');
@@ -11,15 +12,62 @@ const SearchInput = () => {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (query.trim()) {
-      // URL change: /result?q=searchTerm
       router.push(`/result?q=${encodeURIComponent(query.trim())}`);
     }
+  };
+
+  const handleVoiceSearch = () => {
+    if (typeof window === 'undefined') return; // ✅ SSR safe
+
+    const SpeechRecognition =
+      window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    if (!SpeechRecognition) {
+      alert('Your browser does not support voice recognition.');
+      return;
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'en-US';
+    recognition.interimResults = true;
+    recognition.maxAlternatives = 1;
+
+    recognition.start();
+
+    recognition.onresult = (event: SpeechRecognitionEvent) => {
+      let interimTranscript = '';
+      for (let i = 0; i < event.results.length; i++) {
+        const transcript = event.results[i][0].transcript;
+        if (event.results[i].isFinal) {
+          setQuery(transcript);
+
+          setTimeout(() => {
+            if (transcript.trim()) {
+              router.push(`/result?q=${encodeURIComponent(transcript.trim())}`);
+            }
+          }, 300);
+        } else {
+          interimTranscript += transcript;
+          setQuery(interimTranscript);
+        }
+      }
+    };
+
+    recognition.onend = () => {
+      if (query.trim()) {
+        router.push(`/result?q=${encodeURIComponent(query.trim())}`);
+      }
+    };
+
+    recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
+      console.error('Voice recognition error:', event.error);
+    };
   };
 
   return (
     <form
       onSubmit={handleSearch}
-      className="relative w-full max-w-4xl px-4 pointer-events-auto"
+      className="relative search-padding w-full max-w-4xl pointer-events-auto"
     >
       {/* side glows */}
       <div className="pointer-events-none absolute -left-4 top-1/2 -translate-y-1/2 h-24 w-40 rounded-full bg-white/10 blur-xl"></div>
@@ -31,22 +79,23 @@ const SearchInput = () => {
         <button
           type="button"
           aria-label="Voice search"
-          className="flex h-12 w-12 items-center justify-center text-white transition"
+          className="flex h-12 w-12 items-center justify-center text-white hover:text-blue-500 transition"
+          onClick={handleVoiceSearch}
         >
           <Mic className="h-5 w-5" />
         </button>
 
         {/* Search input */}
-        <div className="flex-1 flex items-center rounded-full bg-white/90 ring-1 ring-black/5 shadow-md">
+        <div className="flex-1 flex items-center rounded-full bg-white/90 hover:bg-white ring-1 ring-black/5 shadow-md transition-colors">
           <input
             type="text"
             placeholder="Search Oyou or type a URL"
-            className="w-full bg-transparent outline-none placeholder-black/50 px-3"
+            className="search-input w-full bg-transparent outline-none placeholder-black/50 px-3"
             value={query}
             onChange={e => setQuery(e.target.value)}
           />
-          <button type="submit" className="px-3">
-            <Search className="h-6 w-6 opacity-70" aria-hidden="true" />
+          <button type="submit" className="search-icon">
+            <Search className="h-5 w-5 opacity-80" aria-hidden="true" />
           </button>
         </div>
 

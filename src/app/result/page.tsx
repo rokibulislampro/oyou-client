@@ -1,12 +1,14 @@
-import Result from '@/Components/Result/Result'
-import React from 'react'
+'use client'; // ✅ client-only page
 
-const page = () => {
+import React from 'react';
+import Result from '@/Components/Result/Result';
+
+const ResultPage: React.FC = () => {
   return (
     <div>
       <Result />
     </div>
-  )
-}
+  );
+};
 
-export default page
+export default ResultPage;
